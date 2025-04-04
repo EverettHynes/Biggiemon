@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Timer;
 import javax.swing.*;
+import java.awt.Font;
 
 public class Game extends JPanel implements Runnable, KeyListener, MouseListener {
     private BufferedImage back;
@@ -20,7 +21,11 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
     private ImageIcon PlayerPic;
 
     private ImageIcon backgroundMain;
-    private ImageIcon backgroundBack;
+    private ImageIcon backgroundSoup;
+
+    private ImageIcon WormsWorthMap;
+    private ImageIcon WormsWorthProfile;
+    public boolean wormtalk;
 
     private ImageIcon IceCubePic;
 
@@ -38,6 +43,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
         this.addMouseListener(this);
 
         key = -1;
+        
+
+        wormtalk = false; 
 
         screen = "GameArea";
 
@@ -45,15 +53,20 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
         name = "Player";
 
-        IceCube = new biggie("IceCubert", 100, 100, 100, 100, IceCubePic, IceCubePic, 100, 10, 5, true, false);
+        IceCube = new biggie("IceCubert", "GameArea", 100, 100, 100, 100, IceCubePic, IceCubePic, 100, 10, 5, true, false);
 
         PlayerPic = new ImageIcon("TK_DownFace.png");
-        backgroundMain = new ImageIcon("Slice1Front.png");
-        backgroundBack = new ImageIcon("Slice1Back.png");
 
-        IceCubePic = new ImageIcon("IceCubeFront.png");
+        backgroundMain = new ImageIcon("BackgroundIceCream.png");
+        backgroundSoup = new ImageIcon("BackgroundHotSprings.png");
 
-        player = new Player(name, 100, 100, 58, 96, new ImageIcon("TK_DownFace.png"), "Down");
+        WormsWorthMap = new ImageIcon("Wormsworth house.png");
+        WormsWorthProfile = new ImageIcon("Womrsworth.png");  
+
+
+        IceCubePic = new ImageIcon("BackGroundIceCream.png");
+
+        player = new Player(name, 540, 350, 58, 96, new ImageIcon("TK_DownFace.png"), "Down");
     }
 
     public void run() {
@@ -72,7 +85,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
                 g2d.clearRect(0, 0, getWidth(), getHeight());
 
                 g2d.drawString("Click to start", 100, 100);
-                g2d.drawRect(200, 200, 400, 400);
+
                 drawDialog(g2d);
             }
             case "GameArea" -> {
@@ -82,12 +95,22 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
                 checkCollision(g2d); 
 
+                if(wormtalk){
+                    drawWormsWorthProfile(g2d);
+                }
+                
+                
+                
                 drawPlayer(g2d);
 
-                g2d.drawImage(backgroundBack.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
 
-
-
+            case "Soup" -> {
+                g2d.clearRect(0, 0, getWidth(), getHeight());
+                
+                g2d.drawImage(backgroundSoup.getImage(), 0, 0, getWidth(), getHeight(), this);
+                
+                drawPlayer(g2d);
 
             }
             case "Inventory" -> {
@@ -168,19 +191,83 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, 800, 800);
         g2d.setColor(Color.WHITE);
-        time++;
-        if (time / 5 < message.length()) {
-            g2d.drawString(message.substring(0, time / 5), 100, 100);
-        } else {
-            g2d.drawString(message, 100, 100);
-        }
+
     }
 
     public void checkCollision(Graphics g2d) {
-        g2d.drawRect(100, 250, 200, 100);
+        
+        g2d.setColor(Color.red);
+        g2d.drawRect(300,600,800,250);
+        g2d.drawRect(900,500,800,250);
 
         // Collision detection
-        Rectangle labRect = new Rectangle(100, 250, 200, 100);
+        Rectangle labRect = new Rectangle(100, 50, 100, 200);
+        Rectangle screenEdge1 = new Rectangle(0,550, 300, 250);
+        Rectangle screenEdge2 = new Rectangle(300,600,600,250);
+        Rectangle screenEdge3 = new Rectangle(900, 500, 300, 250); // Right edge of the screen
+       
+       
+        if (player.getX() + player.getWidth() > screenEdge3.getX() && player.getX() < screenEdge3.getX() + screenEdge3.getWidth()
+                && player.getY() + player.getHeight() > screenEdge3.getY()
+                && player.getY() < screenEdge3.getY() + screenEdge3.getHeight()) {
+            player.setDx(0);
+            player.setDy(0);
+            if (player.getDirection().equals("Right")) {
+                player.setX(player.getX() - 2);
+            }
+            if (player.getDirection().equals("Left")) {
+                player.setX(player.getX() + 2);
+            }
+            if (player.getDirection().equals("Up")) {
+                player.setY(player.getY() + 2);
+            }
+            if (player.getDirection().equals("Down")) {
+                player.setY(player.getY() - 2);
+            }
+        }
+   
+
+        Rectangle ScreenLeaveLeft = new Rectangle(0, 0, 50, getHeight()); // Left edge of the screen
+
+        if(player.getX() + player.getWidth() > screenEdge2 .getX() && player.getX() < screenEdge2.getX() + screenEdge2.getWidth()
+                && player.getY() + player.getHeight() > screenEdge2.getY()
+                && player.getY() < screenEdge2.getY() + screenEdge2.getHeight()) {
+            player.setDx(0);
+            player.setDy(0);
+            if (player.getDirection().equals("Right")) {
+                player.setX(player.getX() - 2);
+            }
+            if (player.getDirection().equals("Left")) {
+                player.setX(player.getX() + 2);
+            }
+            if (player.getDirection().equals("Up")) {
+                player.setY(player.getY() + 2);
+            }
+            if (player.getDirection().equals("Down")) {
+                player.setY(player.getY() - 2);
+            }
+        }
+
+         // Collision with labRect
+
+        if (player.getX() + player.getWidth() > screenEdge1 .getX() && player.getX() < screenEdge1.getX() + screenEdge1.getWidth()
+                && player.getY() + player.getHeight() > screenEdge1.getY()
+                && player.getY() < screenEdge1.getY() + screenEdge1.getHeight()) {
+            player.setDx(0);
+            player.setDy(0);
+            if (player.getDirection().equals("Right")) {
+                player.setX(player.getX() - 2);
+            }
+            if (player.getDirection().equals("Left")) {
+                player.setX(player.getX() + 2);
+            }
+            if (player.getDirection().equals("Up")) {
+                player.setY(player.getY() + 2);
+            }
+            if (player.getDirection().equals("Down")) {
+                player.setY(player.getY() - 2);
+            }
+        }
 
         if (player.getX() + player.getWidth() > labRect.getX() && player.getX() < labRect.getX() + labRect.getWidth()
                 && player.getY() + player.getHeight() > labRect.getY()
@@ -200,7 +287,41 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
                 player.setY(player.getY() - 2);
             }
         }
+        
+        if(player.getX() + player.getWidth() < ScreenLeaveLeft.getWidth()) { 
+            player.setX(getWidth()-50); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "Soup"; 
+            time = 0;
+        }
+
+
+
     }
+
+    private void drawWormsWorthProfile(Graphics g2d) {
+        g2d.drawImage(WormsWorthMap.getImage(), 130, 220, 20, 20, this);
+
+        g2d.setFont(new Font("Sans_serif", Font.BOLD, 32)); // Set a big, bold font for readability
+        g2d.drawImage(new ImageIcon("border.png").getImage(), 0, 565, getWidth(), 200, this);
+
+        g2d.drawImage(WormsWorthProfile.getImage(), 0, 555, 200, 200, this);
+
+        message = "Erm .......... What The Sigma ?!?!?!";
+        time++;
+        if (time / 8 < message.length()) {
+            g2d.drawString(message.substring(0, time / 5), 250, 610);
+        } else {
+            g2d.drawString(message, 250, 610);
+        }
+    
+    }
+
+
+    
+
+
 
     // DO NOT DELETE
     @Override
@@ -231,6 +352,17 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
             player.setDirection("Right");
 
         }
+
+        Rectangle labRect = new Rectangle(100, 50, 100, 200);
+        
+        if(e.getKeyCode() == KeyEvent.VK_Z) {
+            if (screen.equals("GameArea") && player.getX() + player.getWidth() >= labRect.getX() && player.getX() <= labRect.getX() + labRect.getWidth()
+                && player.getY() + player.getHeight() >= labRect.getY()
+                && player.getY() <= labRect.getY() + labRect.getHeight()) {
+                    
+                wormtalk = true;
+        }
+    }
 
         key = e.getKeyCode();
     }

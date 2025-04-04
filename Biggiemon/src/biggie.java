@@ -3,6 +3,8 @@ import javax.swing.ImageIcon;
 
     public class biggie{
         private String name;
+        private String screen;
+
         private int x;
         private int y;
     
@@ -13,7 +15,6 @@ import javax.swing.ImageIcon;
         private ImageIcon picF;
         
         
-        
         private int health;
         private int attack;
         private int defense;
@@ -22,8 +23,9 @@ import javax.swing.ImageIcon;
         private boolean inBattle;
 
     
-        public biggie(String name, int x, int y, int width, int height, ImageIcon picB, ImageIcon picF, int health, int attack, int defense, boolean isAlive, boolean inBattle) {
+        public biggie(String name, String screen,int x, int y, int width, int height, ImageIcon picB, ImageIcon picF, int health, int attack, int defense, boolean isAlive, boolean inBattle) {
             this.name = name;
+            this.screen = screen;
             this.x = x;
             this.y = y;
             this.width = width;
