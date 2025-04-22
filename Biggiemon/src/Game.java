@@ -105,10 +105,13 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
             }
 
-            case "Soup" -> {
+            case "HotSprings" -> {
                 g2d.clearRect(0, 0, getWidth(), getHeight());
                 
                 g2d.drawImage(backgroundSoup.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+                checkCollisionHotSprings(g2d);
+
                 
                 drawPlayer(g2d);
 
@@ -207,7 +210,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
         Rectangle screenEdge3 = new Rectangle(900, 500, 300, 250); // Right edge of the screen
        
        
-        if (player.getX() + player.getWidth() > screenEdge3.getX() && player.getX() < screenEdge3.getX() + screenEdge3.getWidth()
+            if (player.getX() + player.getWidth() > screenEdge3.getX() && player.getX() < screenEdge3.getX() + screenEdge3.getWidth()
                 && player.getY() + player.getHeight() > screenEdge3.getY()
                 && player.getY() < screenEdge3.getY() + screenEdge3.getHeight()) {
             player.setDx(0);
@@ -289,15 +292,27 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
         }
         
         if(player.getX() + player.getWidth() < ScreenLeaveLeft.getWidth()) { 
-            player.setX(getWidth()-50); 
+            player.setX(getWidth()-100); 
             player.setDx(0); 
             player.setDy(0);
-            screen = "Soup"; 
+            screen = "HotSprings"; 
             time = 0;
         }
 
 
 
+    }
+
+    public void checkCollisionHotSprings(Graphics g2d) {
+
+
+        if(player.getX() + player.getWidth() > WIDTH-100) { 
+            player.setX(50); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "GameArea"; 
+            time = 0;
+        }
     }
 
     private void drawWormsWorthProfile(Graphics g2d) {
