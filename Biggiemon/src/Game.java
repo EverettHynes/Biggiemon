@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Timer;
 import javax.swing.*;
-import java.awt.Font;
 
 public class Game extends JPanel implements Runnable, KeyListener, MouseListener {
     private BufferedImage back;
@@ -22,6 +21,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
     private ImageIcon backgroundMain;
     private ImageIcon backgroundSoup;
+    private ImageIcon backgroundFork;
+    private ImageIcon backgroundSushi;
 
     private ImageIcon WormsWorthMap;
     private ImageIcon WormsWorthProfile;
@@ -59,6 +60,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
         backgroundMain = new ImageIcon("BackgroundIceCream.png");
         backgroundSoup = new ImageIcon("BackgroundHotSprings.png");
+        backgroundFork = new ImageIcon("BackgroundSpaghetti.png");
+        backgroundSushi = new ImageIcon("BackgroundSushi.png");
 
         WormsWorthMap = new ImageIcon("Wormsworth house.png");
         WormsWorthProfile = new ImageIcon("Womrsworth.png");  
@@ -116,19 +119,29 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
                 drawPlayer(g2d);
 
             }
-            case "Inventory" -> {
+
+            case "Fork" -> {
                 g2d.clearRect(0, 0, getWidth(), getHeight());
-                for (biggie item : Inventory) {
-                    g2d.drawImage(item.getPicP().getImage(), item.getX(), item.getY(), item.getWidth(),
-                            item.getHeight(), null);
-                    g2d.drawString(item.getName() + " - Health: " + item.getHealth() + ", Attack: " + item.getAttack()
-                            + ", Defense: " + item.getDefense(), item.getX(), item.getY() - 10);
-                }
-            }
-            case "Batlle" -> {
-                g2d.clearRect(0, 0, getWidth(), getHeight());
-                g2d.drawString("You are in battle", 100, 100);
+
+                g2d.drawImage(backgroundFork.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+                checkCollisionSpaghetti();
+
                 drawPlayer(g2d);
+            }
+
+            case "Sushi" -> {
+                g2d.clearRect(0, 0, getWidth(), getHeight());
+
+                g2d.drawImage(backgroundSushi.getImage(), 0, 0, getWidth(), getHeight(), this);
+
+
+
+                checkCollisionSushi(g2d);
+
+                
+                drawPlayer(g2d);
+            
             }
         }
     }
@@ -228,9 +241,6 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
                 player.setY(player.getY() - 2);
             }
         }
-   
-
-        Rectangle ScreenLeaveLeft = new Rectangle(0, 0, 50, getHeight()); // Left edge of the screen
 
         if(player.getX() + player.getWidth() > screenEdge2 .getX() && player.getX() < screenEdge2.getX() + screenEdge2.getWidth()
                 && player.getY() + player.getHeight() > screenEdge2.getY()
@@ -291,11 +301,20 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
             }
         }
         
-        if(player.getX() + player.getWidth() < ScreenLeaveLeft.getWidth()) { 
-            player.setX(getWidth()-100); 
+        if(player.getX() < 10) { 
+            player.setX(1000); 
             player.setDx(0); 
             player.setDy(0);
             screen = "HotSprings"; 
+            time = 0;
+        }
+
+                
+        if(player.getY() < 10) { 
+            player.setY(700); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "Fork"; 
             time = 0;
         }
 
@@ -305,12 +324,68 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 
     public void checkCollisionHotSprings(Graphics g2d) {
 
+        g2d.drawRect(0,0,500,200);
+        g2d.drawRect(700,0,600,200);
+        g2d.drawRect(0,500,getWidth(), 300);
+        g2d.drawRect(0,0,10,800);
 
-        if(player.getX() + player.getWidth() > WIDTH-100) { 
+
+
+        if(player.getX() + player.getWidth() > 1200-10) { 
             player.setX(50); 
             player.setDx(0); 
             player.setDy(0);
             screen = "GameArea"; 
+            time = 0;
+        }
+
+        if(player.getY() < 10) { 
+            player.setY(700); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "Sushi"; 
+            time = 0;
+        }
+    }
+
+    public void checkCollisionSushi(Graphics g2d) {
+
+        g2d.drawRect(0,50,320,300);
+        g2d.drawRect(0,0,600,10);
+
+
+        if(player.getX() + player.getWidth() > getWidth()-10) { 
+            player.setX(50); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "Fork"; 
+            time = 0;
+        }
+
+        if(player.getY() > getHeight()-10) { 
+            player.setY(50); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "HotSprings"; 
+            time = 0;
+        }
+    }
+
+    public void checkCollisionSpaghetti(){
+        
+        if(player.getY() > getHeight()-10) { 
+            player.setY(50); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "GameArea"; 
+            time = 0;
+        }
+
+        if(player.getX() < 10) { 
+            player.setX(1100); 
+            player.setDx(0); 
+            player.setDy(0);
+            screen = "Sushi"; 
             time = 0;
         }
     }
@@ -348,22 +423,22 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_UP) {
-            player.setDy(-2);
+            player.setDy(-5);
             player.setDirection("Up");
         }
 
         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            player.setDy(2);
+            player.setDy(5);
             player.setDirection("Down");
         }
 
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            player.setDx(-2);
+            player.setDx(-5);
             player.setDirection("Left");
         }
 
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            player.setDx(2);
+            player.setDx(5);
             player.setDirection("Right");
 
         }
@@ -375,7 +450,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
                 && player.getY() + player.getHeight() >= labRect.getY()
                 && player.getY() <= labRect.getY() + labRect.getHeight()) {
                     
-                wormtalk = true;
+                wormtalk = !wormtalk;
         }
     }
 
