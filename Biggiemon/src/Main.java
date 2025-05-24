@@ -7,14 +7,14 @@ public class Main extends JFrame {
     public static final int HEIGHT = 800;
 
     public Main() {
-        super("BIGGIE MON");
+        super("BIGGIE MON / also known as BITEBOUND (the : Flavor Saga)");
         setSize(WIDTH, HEIGHT);
         Game play = new Game();
         ((Component) play).setFocusable(true);
 
         Color RoyalBlue = new Color(22, 13, 193);
 
-        setBackground(RoyalBlue);
+        setBackground(Color.BLACK);
         
         getContentPane().add(play);
         setVisible(true);
